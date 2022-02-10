@@ -7,12 +7,18 @@ from pkg.tools import utils as u
 from pkg.talk import *
 
 print('########################################################')
-# 커맨드라인 인수
+print('# 커맨드라인 인수')
+print('########################################################')
 
 print(sys.argv)
+print()
+"""OUTPUT
+['/Users/user/PycharmProjects/udemy-python3/python_programming/section4.py']
+"""
 
 print('########################################################')
-# Import 문과 AS
+print('# Import 문과 AS')
+print('########################################################')
 
 # r = pkg.utils.say_twice('hello')
 r = u.say_twice('hello')

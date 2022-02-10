@@ -1,22 +1,30 @@
 print('########################################################')
-
-
-# 클래스의 정의
-
-class Person(object):
-    def say_something(self):
-        print('hello')
-
-
-# object쓰면 계승이라는 것을 말할 때, base class로 쓸 수 있기 때문에 object라고 써도 된다.
-
-person = Person()
-person.say_something()
-
+print('# 클래스의 정의')
 print('########################################################')
 
 
-# 클래스의 초기화와 클래스 변수
+class Person(object):
+    @staticmethod
+    def say_something():
+        print('hello')
+
+
+person = Person()
+person.say_something()
+print()
+"""OUTPUT
+hello
+"""
+
+print('########################################################')
+print('# 클래스의 초기화와 클래스 변수')
+print('########################################################')
+
+"""
+__init-__에 정의하면 멤버 변수
+Class 내부에 정의하면 static 변수 -> Class간에 공유
+"""
+
 
 class Person2:
     def __init__(self, name):
@@ -26,27 +34,38 @@ class Person2:
         print('I am {}. hello'.format(self.name))
         self.run(2)
 
-    def run(self, num):
+    @staticmethod
+    def run(num):
         print('run' * num)
 
 
 person2 = Person2('Mike')
 person2.say_something()
 
+Person2.run(3)
+print()
+"""OUTPUT
+I am Mike. hello
+runrun
+runrunrun
+"""
+
+print('########################################################')
+print('# 생성자와 소멸자')
 print('########################################################')
 
-
-# 생성자와 소멸자
 
 class Person3:
     def __init__(self, name):
         self.name = name
+        print('hello')
 
     def say_something(self):
         print('I am {}. hello'.format(self.name))
         self.run(2)
 
-    def run(self, num):
+    @staticmethod
+    def run(num):
         print('run' * num)
 
     def __del__(self):
@@ -55,20 +74,26 @@ class Person3:
 
 person3 = Person3('Mike')
 person3.say_something()
-
 del person3
+print()
+"""OUTPUT
+hello
+I am Mike. hello
+runrun
+good bye
+"""
 
 print('########################################################')
-
-
-# 클래스의 계승
+print('# 클래스의 계승(상속)')
+print('########################################################')
 
 
 class Car(object):
     def __init__(self, model=None):
         self.model = model
 
-    def run(self):
+    @staticmethod
+    def run():
         print('run')
 
 
@@ -82,50 +107,69 @@ car.run()
 toyota_car = ToyotaCar('Lexus')
 print(toyota_car.model)
 toyota_car.run()
+print()
+"""OUTPUT
+run
+Lexus
+run
+"""
+
+"""
+ __ 두개 붙이면 private -> 외부에서 접근 안됨, 내부는 가능
+ _ 하나는 안보이기만 하고 외부에서 접근은 가능
+"""
 
 
 class TeslaCar(Car):
-    def __init__(self, model='Model S',
-                 enable_auto_run=False,
-                 passwd='123'):
+    def __init__(self, model='Model S', enable_auto_run=False, passwd='123'):
+
         super().__init__(model)
-        self._enable_auto_run = enable_auto_run
+        self.__enable_auto_run = enable_auto_run
         self.passwd = passwd
 
     @property
     def enable_auto_run(self):
-        return self._enable_auto_run
+        return self.__enable_auto_run
 
     @enable_auto_run.setter
     def enable_auto_run(self, is_enable):
         if self.passwd == '123':
-            self._enable_auto_run = is_enable
+            self.__enable_auto_run = is_enable
         else:
             raise ValueError
 
-    def run(self):
+    @staticmethod
+    def run():
         print('super fast')
 
-    def auto_run(self):
+    @staticmethod
+    def auto_run():
         print('auto run')
 
 
 tesla_car = TeslaCar()
-print(tesla_car.model)
 print(type(tesla_car.model))
 tesla_car.run()
 tesla_car.auto_run()
 
 tesla_car.enable_auto_run = True
 print(tesla_car.enable_auto_run)
+print()
+"""OUTPUT
+run
+Lexus
+run
 
-# __ 두개 붙이면 private -> 외부에서 접근 안됨, 내부는 가능
-# _ 하나는 안보이기만 하고 외부에서 접근은 가능
+<class 'str'>
+super fast
+auto run
+True
+"""
 
 print('########################################################')
+print('# 클래스를 구조체로서 쓸 때의 주의점')
+print('########################################################')
 
-
-# 클래스를 구조체로서 쓸 때의 주의점
 
 class T:
     pass
@@ -135,14 +179,22 @@ t = T()
 t.name = 'Mike'
 t.age = 20
 print(t.name, t.age)
+print()
+"""OUTPUT
+Mike 20
+"""
 
 tesla_car.__enable_auto_run = 'XX'
 print(tesla_car.__enable_auto_run)  # 에러 안남 나옴, 덮어씀 그래서 class밖에서 멤버변수 만들어서 덮어씌우는거 잘 안쓰지만, 주의해야함
+print()
+"""OUTPUT
+XX
+"""
 
 print('########################################################')
+print('# 덕타이핑')
+print('########################################################')
 
-
-# 덕타이핑
 
 class Person:
     def __init__(self, age=1):
@@ -191,7 +243,8 @@ car.ride(adult)
 # car.ride(baby)
 
 print('########################################################')
-# 추상 클래스, 뭐 안써도 된다는 의견도 있다. 팀바팀, 컨벤션
+print('# 추상 클래스, 뭐 안써도 된다는 의견도 있다. 팀바팀, 컨벤션')
+print('########################################################')
 
 import abc
 
@@ -247,9 +300,9 @@ car.ride(adult)
 # car.ride(baby)
 
 print('########################################################')
+print('# 다중 상속')
+print('########################################################')
 
-
-# 다중 계승
 
 class Person:
     def talk(self):
@@ -273,11 +326,17 @@ person_car_robot = PersonCarRobot()
 person_car_robot.talk()
 person_car_robot.run()  # 왼쪽에 먼저 있는게 실행됨
 person_car_robot.fly()
+print()
+"""OUTPUT
+talk
+person run
+fly
+"""
 
 print('########################################################')
+print('# 클래스 변수')
+print('########################################################')
 
-
-# 클래스 변수
 
 class Person:
     def __init__(self, name):
@@ -292,6 +351,11 @@ a = Person('A')
 a.who_are_you()
 b = Person('B')
 b.who_are_you()
+print()
+"""OUTPUT
+A human
+B human
+"""
 
 
 class Person:
@@ -308,6 +372,11 @@ a = Person('A')
 a.who_are_you()
 b = Person('B')
 b.who_are_you()
+print()
+"""OUTPUT
+A human
+B human
+"""
 
 
 class T:
@@ -326,11 +395,19 @@ d = T()
 d.add_word("add 3")
 d.add_word("add 4")
 print(d.words)
+print()
+"""OUTPU
+['add 1', 'add 2']
+['add 1', 'add 2', 'add 3', 'add 4']
+"""
 
 print('########################################################')
+print('# 클래스 메서드와 스태틱 메서드')
+print('########################################################')
 
-
-# 클래스 메서드와 스태틱 메서드
+"""
+class 메서드가 java에서 생각하는 static메서드
+"""
 
 class Person:
     kind = 'human'
@@ -350,19 +427,36 @@ class Person:
 a = Person()
 print(a)  # instance
 print(a.what_is_your_kind())
+print()
 
 b = Person
 print(b)  # class
 print(b.kind)
 print(b.what_is_your_kind())
+print()
 
 print(Person.what_is_your_kind())
 Person.about()
+print()
+"""OUTPUT
+<__main__.Person object at 0x7fac33226e50>
+human
+
+<class '__main__.Person'>
+human
+human
+
+human
+about human
+"""
 
 print('########################################################')
+print('# 특수 메서드')
+print('########################################################')
+"""
+ __eq__ 없는 상태에서는 word.text같아도 False로 나옴, 서로 다른 인스턴스이기 때문
+"""
 
-
-# 특수 메서드
 
 class Word:
 
@@ -370,7 +464,7 @@ class Word:
         self.text = text
 
     def __str__(self):
-        return 'Word!!!!'
+        return self.text
 
     def __len__(self):
         return len(self.text)
@@ -381,14 +475,14 @@ class Word:
     def __eq__(self, word):
         return self.text.lower() == word.text.lower()
 
+
 w = Word('test')
+w2 = Word('CLASS')
+
 print(w)
 print(len(w))
-
-w2 = Word('#@$')
-
 print(w + w2)
 print(w == w2)
-
-# __eq__ 없는 상태에서는 word.text같아도 False로 나옴, 서로 다른 인스턴스이기 때문
+print()
+"""OUTPUT"""
 
